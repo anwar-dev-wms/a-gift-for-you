@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>For Shafia 🤍</title>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-color: #f7f4ee;
+      --card-bg: #ffffff;
+      --primary: #3b5e4c;
+      --primary-light: #e8f0ec;
+      --accent: #c29b62;
+      --text-main: #2c3e2f;
+      --text-muted: #6b7c73;
+      --font-arabic: 'Amiri', serif;
+      --font-main: 'Inter', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      font-family: var(--font-main);
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      min-height: 100dvh;
+      overflow: hidden; /* Prevents background scrolling */
+      position: relative;
+    }
+
+    /* Soft background glow */
+    body::before {
+      content: "";
+      position: absolute;
+      top: -10%; left: -10%;
+      width: 120%; height: 120%;
+      background: radial-gradient(circle at 50% 30%, rgba(255,255,255,0.8) 0%, transparent 60%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .app-container {
+      width: 100%;
+      height: 100vh;
+      height: 100dvh;
+      position: relative;
+      z-index: 1;
+      overflow: hidden;
+    }
+
+    /* Screen Management */
+    .screen {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.6s ease, transform 0.6s ease;
+      transform: translateY(15px);
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .screen.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+      z-index: 10;
+    }
+
+    .screen-inner {
+      width: 100%;
+      max-width: 480px; /* Mobile-first max width */
+      background: var(--card-bg);
+      padding: 36px 28px;
+      border-radius: 32px;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.04), 0 2px 8px rgba(0, 0, 0, 0.02);
+      border: 1px solid rgba(194, 155, 98, 0.15);
+      text-align: center;
+      margin: auto; /* Centers if scrolling occurs */
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* Typography */
+    .arabic-large {
+      font-family: var(--font-arabic);
+      font-size: 2.2rem;
+      line-height: 1.5;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+
+    .arabic-medium {
+      font-family: var(--font-arabic);
+      font-size: 1.8rem;
+      line-height: 1.6;
+      color: var(--primary);
+      background: var(--primary-light);
+      padding: 16px;
+      border-radius: 16px;
+      margin: 10px 0;
+    }
+
+    h1 {
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: var(--primary);
+      letter-spacing: -0.5px;
+    }
+
+    h2 {
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+
+    p {
+      font-size: 1.05rem;
+      line-height: 1.6;
+      color: var(--text-muted);
+    }
+
+    .translation {
+      font-size: 0.95rem;
+      font-style: italic;
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    /* Buttons */
+    button {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      padding: 16px 24px;
+      font-size: 1.1rem;
+      font-weight: 500;
+      border-radius: 50px;
+      cursor: pointer;
+      width: 100%;
+      font-family: var(--font-main);
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 12px rgba(59, 94, 76, 0.2);
+      margin-top: 10px;
+    }
+
+    button:active {
+      transform: scale(0.97);
+      box-shadow: 0 2px 6px rgba(59, 94, 76, 0.2);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--primary);
+      border: 1px solid var(--primary);
+      box-shadow: none;
+    }
+
+    /* Specific Elements */
+    .greeting-box {
+      padding: 10px 0 20px;
+    }
+
+    .message-box {
+      background: var(--bg-color);
+      padding: 24px;
+      border-radius: 20px;
+      border-left: 4px solid var(--accent);
+      text-align: left;
+      margin: 10px 0;
+    }
+
+    .message-box h3 {
+      font-size: 1.2rem;
+      color: var(--primary);
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+
+    .quran-verse {
+      font-style: italic;
+      font-weight: 500;
+      color: var(--primary);
+      display: block;
+      margin: 12px 0;
+    }
+
+    .rotating-text {
+      min-height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      font-weight: 500;
+      color: var(--primary);
+      line-height: 1.5;
+      transition: opacity 0.4s ease;
+    }
+
+    .checklist {
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .checklist-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      font-size: 1.05rem;
+      color: var(--text-muted);
+    }
+
+    .checklist-icon {
+      color: var(--accent);
+      font-size: 1.2rem;
+      line-height: 1.2;
+    }
+
+    .final-text {
+      font-size: 1.15rem;
+      font-weight: 500;
+      color: var(--primary);
+      line-height: 1.6;
+    }
+
+    .signature {
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px dashed #dcd3c6;
+      font-weight: 600;
+      font-size: 1.2rem;
+      color: var(--primary);
+      font-family: var(--font-arabic); /* A nice touch for the name */
+    }
+
+    .signature span {
+      display: block;
+      font-family: var(--font-main);
+      font-size: 0.9rem;
+      font-weight: 400;
+      color: var(--text-muted);
+      margin-top: 8px;
+      font-style: italic;
+    }
+
+    /* Hidden utility */
+    .hidden {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+
+    <!-- SCREEN 1: Greeting -->
+    <div class="screen active" id="screen1">
+      <div class="screen-inner">
+        <div class="greeting-box">
+          <h1 class="arabic-large">السَّلَامُ عَلَيْكُمْ وَرَحْمَةُ اللهِ وَبَرَكَاتُهُ</h1>
+          <p class="translation">Assalamualaikum wa rahmatullahi wa barakatuhu</p>
+        </div>
+        
+        <button onclick="nextScreen(2)">Click Here ✨</button>
+      </div>
+    </div>
+
+    <!-- SCREEN 2: Welcome & Reminder -->
+    <div class="screen" id="screen2">
+      <div class="screen-inner">
+        <h2>Dear Shafia 🤍</h2>
+        
+        <p style="margin-bottom: 10px;">Welcome. I wanted to give you a moment of peace before you step into this big chapter.</p>
+
+        <div class="message-box">
+          <h3 style="font-family: var(--font-arabic); font-size: 1.6rem; font-weight: normal; text-align: right; margin-bottom: 0;">فَإِنَّ مَعَ الْعُسْرِ يُسْرًا</h3>
+          <span class="quran-verse">"For indeed, with hardship comes ease." (Quran 94:5)</span>
+          <p style="font-size: 0.95rem;">Every dream has a difficult chapter. Take a deep breath, do your best, and place your trust in Allah.</p>
+        </div>
+
+        <button onclick="nextScreen(3)">Give Me Strength 🌸</button>
+      </div>
+    </div>
+
+    <!-- SCREEN 3: Rotating Motivation -->
+    <div class="screen" id="screen3">
+      <div class="screen-inner">
+        <h2>A Little Strength for You</h2>
+        
+        <div class="rotating-text" id="motivationText">
+          <!-- Text injected via JS -->
+        </div>
+
+        <button onclick="nextScreen(4)">I'm Ready 🩺</button>
+      </div>
+    </div>
+
+    <!-- SCREEN 4: Dua & Checklist -->
+    <div class="screen" id="screen4">
+      <div class="screen-inner">
+        <h2>Before You Enter</h2>
+        
+        <div class="arabic-medium">
+          رَّبِّ زِدْنِي عِلْمًا
+        </div>
+        <p class="translation">Rabbi zidni ilma — "My Lord, increase me in knowledge." (20:114)</p>
+
+        <div class="checklist">
+          <div class="checklist-item">
+            <span class="checklist-icon">🌿</span>
+            <span>Take a deep breath. You are prepared.</span>
+          </div>
+          <div class="checklist-item">
+            <span class="checklist-icon">🌿</span>
+            <span>Read every question carefully.</span>
+          </div>
+          <div class="checklist-item">
+            <span class="checklist-icon">🌿</span>
+            <span>Manage your time, one question at a time.</span>
+          </div>
+          <div class="checklist-item">
+            <span class="checklist-icon">🌿</span>
+            <span>Trust your hard work and your dua.</span>
+          </div>
+        </div>
+
+        <button onclick="nextScreen(5)" style="margin-top: 16px;">Next</button>
+      </div>
+    </div>
+
+    <!-- SCREEN 5: Final Surprise Reveal -->
+    <div class="screen" id="screen5">
+      <div class="screen-inner">
+        <p style="font-size: 0.8rem; letter-spacing: 1px; text-transform: uppercase; font-weight: 600;">Made with a purpose</p>
+        
+        <h1 style="font-size: 1.8rem; margin: 10px 0;">You Were Meant to Find This Today.</h1>
+        
+        <p>A little encouragement for your big day. A few reminders to keep your faith strong, your mind calm, and your confidence alive.</p>
+
+        <div id="surpriseMessage" class="hidden" style="transition: opacity 0.5s ease;">
+          <div class="message-box" style="margin-top: 20px; border-left-color: var(--primary);">
+            <h3>And as you work toward your dreams, remember…</h3>
+            <p>There's a future I'm looking forward to building with you, In sha Allah.</p>
+            <p style="margin-top: 12px; font-weight: 500; color: var(--primary);">With duas for your success and happiness, always.</p>
+            <div class="signature">
+              Muhammad Anwar
+              <span>May Allah bless your journey and our future. Ameen.</span>
+            </div>
+          </div>
+        </div>
+
+        <button id="revealBtn" onclick="revealSurprise()">Open My Special Message 💌</button>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // ---- Screen Navigation Logic ----
+    function nextScreen(screenNumber) {
+      // Hide all screens
+      document.querySelectorAll('.screen').forEach(screen => {
+        screen.classList.remove('active');
+      });
+      
+      // Show target screen
+      const target = document.getElementById('screen' + screenNumber);
+      if (target) {
+        target.classList.add('active');
+      }
+
+      // If entering screen 3, start the rotating text
+      if (screenNumber === 3) {
+        startRotatingText();
+      } else {
+        stopRotatingText();
+      }
+    }
+
+    // ---- Rotating Motivation Logic ----
+    const messages = [
+      "You've worked hard to reach this point. Walk in with confidence.",
+      "Focus on what you know, take one question at a time, and give it your best.",
+      "Make your effort sincere, your intention clear, and your trust in Allah strong."
+    ];
+    
+    let currentMessageIndex = 0;
+    let rotateInterval = null;
+    const textElement = document.getElementById('motivationText');
+
+    function startRotatingText() {
+      // Reset to first message
+      currentMessageIndex = 0;
+      textElement.style.opacity = 0;
+      
+      setTimeout(() => {
+        textElement.innerText = messages[0];
+        textElement.style.opacity = 1;
+      }, 100);
+
+      // Clear existing interval if any
+      if (rotateInterval) clearInterval(rotateInterval);
+
+      // Set new interval
+      rotateInterval = setInterval(() => {
+        textElement.style.opacity = 0;
+        
+        setTimeout(() => {
+          currentMessageIndex = (currentMessageIndex + 1) % messages.length;
+          textElement.innerText = messages[currentMessageIndex];
+          textElement.style.opacity = 1;
+        }, 400); // Wait for fade out before changing text
+        
+      }, 4500); // Change message every 4.5 seconds
+    }
+
+    function stopRotatingText() {
+      if (rotateInterval) {
+        clearInterval(rotateInterval);
+        rotateInterval = null;
+      }
+    }
+
+    // ---- Final Surprise Reveal Logic ----
+    function revealSurprise() {
+      const msgBox = document.getElementById('surpriseMessage');
+      const btn = document.getElementById('revealBtn');
+      
+      // Show the message
+      msgBox.classList.remove('hidden');
+      // Fade in animation
+      setTimeout(() => { msgBox.style.opacity = 1; }, 50);
+      
+      // Hide the button
+      btn.style.display = 'none';
+
+      // Scroll to bottom to ensure message is seen on small screens
+      setTimeout(() => {
+        msgBox.scrollIntoView({ behavior: 'smooth', block: 'end' });
+      }, 100);
+    }
+  </script>
+</body>
+</html>
